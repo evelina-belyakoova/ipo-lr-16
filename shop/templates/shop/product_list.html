@@ -1,0 +1,9 @@
+<h1>Товары</h1>
+
+{% for product in products %}
+    <div>
+        <strong>{{ product.name }}</strong> - {{ product.price }} руб.
+    </div>
+{% empty %}
+    <p>Нет товаров. Добавьте через админку!</p>
+{% endfor %}

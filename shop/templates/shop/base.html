@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой магазин</title>
+</head>
+<body>
+    <a href="/catalog/">Каталог</a> | <a href="/cart/">Корзина</a>
+
+{% if user.is_authenticated %}
+    | Привет, {{ user.username }} | <a href="/accounts/logout/">Выйти</a>
+{% else %}
+    | <a href="/accounts/login/">Войти</a>
+{% endif %}
+
+<hr>\
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

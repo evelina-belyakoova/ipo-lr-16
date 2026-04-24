@@ -1,0 +1,39 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+
+<h1>Корзина</h1>
+
+{% if cart_items %}
+
+    {% for item in cart_items %}
+        <div>
+            <p><b>{{ item.product.name }}</b></p>
+            <p>Цена: {{ item.product.price }}</p>
+            
+            <form method="post" action="/cart/update/{{ item.id }}/">
+                {% csrf_token %}
+                <label>Количество:</label>
+                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}">
+                <button type="submit">Изменить</button>
+            </form>
+            
+            <form method="post" action="/cart/remove/{{ item.id }}/">
+                {% csrf_token %}
+                <button type="submit">Удалить</button>
+            </form>
+            
+            <p><b>Стоимость:</b> {{ item.product.price}}</p>
+        </div>
+        <hr>
+    {% endfor %}
+    
+    <h2>итого: {{ total_price }}</h2>
+
+{% else %}
+    <p>Корзина пуста</p>
+{% endif %}
+
+<a href="/catalog/">Продолжить покупки</a>
+
+{% endblock %}
