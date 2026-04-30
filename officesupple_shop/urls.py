@@ -12,4 +12,5 @@ urlpatterns = [
      path('accounts/', include('django.contrib.auth.urls')),
     path('shop-info/', views.shop_info, name = 'shop_info'),
     path('', include('shop.urls')),
+    path('api/', include('shop.api_urls')),
 ]
