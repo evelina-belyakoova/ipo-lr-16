@@ -1,11 +1,45 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset = "utf-8">
-        <title> Главная страница с ссылками</title>
-    </head>
-    <body>
-        <li><a href="{%url 'about'%}">Об авторе</a></li>
-        <li><a href = "{%url 'shop_info'%}">О магазине</a></li>
-    </body>
-</html>
+{% extends 'shop/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="bg-light p-5 rounded mb-4 text-center">
+    <h1 class="display-4">Добро пожаловать в магазин!</h1>
+    <p class="lead">Лучшие товары для учёбы, офиса и творчества.</p>
+    <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg">Перейти в каталог</a>
+</div>
+
+<h2 class="mb-3"> Популярные товары</h2>
+<div class="row">
+    {% for product in popular_products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+                <img src="https://via.placeholder.com/300x200?text=Нет+фото" class="card-img-top" alt="{{ product.name }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text text-muted fw-bold">{{ product.price }} ₽</p>
+                <a href="{% url 'shop:product_detail' product.pk %}" class="btn btn-outline-primary btn-sm">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><p class="text-muted">Товары пока не добавлены.</p></div>
+    {% endfor %}
+</div>
+
+<h2 class="mb-3 mt-4"> Категории</h2>
+<div class="list-group w-auto">
+    {% for category in categories %}
+    <a href="{% url 'shop:product_list' %}?category={{ category.id }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        {{ category.name }}
+        <span class="badge bg-primary rounded-pill">{{ category.product_set.count }}</span>
+    </a>
+    {% empty %}
+    <div class="list-group-item text-muted">Категории пока не созданы.</div>
+    {% endfor %}
+</div>
+{% endblock %}

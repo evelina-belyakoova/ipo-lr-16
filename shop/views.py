@@ -1,13 +1,19 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .models import Product, Cart, CartItem, Order, OrderItem
+from .models import Product, Cart, CartItem, Order, OrderItem, Category, Manufacturer
 from django.core.mail import EmailMessage
 from openpyxl import Workbook
 from io import BytesIO
+from django.core.paginator import Paginator
 
 def index(request):
-    return render(request, 'shop/index.html')
+    popular_products = Product.objects.all().order_by('-id')[:6]
+    categories = Category.objects.all()
+    return render(request, 'shop/index.html', {
+        'popular_products': popular_products,
+        'categories': categories,
+    })
 
 def about(request):
     return render(request, 'shop/about.html')
@@ -17,11 +23,37 @@ def shop_info(request):
 
 def product_list(request):
     products = Product.objects.all()
-    return render(request, 'shop/product_list.html', {'products': products})
+    category_id = request.GET.get('category')
+    if category_id:
+        products = products.filter(category_id = category_id)
+    manufacturer_id = request.GET.get('manufacturer')
+    if manufacturer_id:
+        products = products.filter(
+            manufacturer_id=manufacturer_id
+        )
+    
+    search_query = request.GET.get('search')
+    if search_query:
+        products = products.filter (
+            Q(name__icontains=search_query) | Q(description__icontains=search_query)
+        )
+    paginator = Paginator(products, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'shop/catalog.html', {
+        'page_obj': page_obj,
+        'categories': Category.objects.all(),
+        'manufacturers': Manufacturer.objects.all(),
+        'current_category': category_id,
+        'current_manufacturer': manufacturer_id,
+        'search_query': search_query,
+        })
 
 def product_detail(request, pk):
-    product = get_object_or_404(Product, id=pk)
-    return render(request, 'shop/product_detail.html',{'product': product})
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'shop/product_detail.html',{
+        'product': product,
+        })
 
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)

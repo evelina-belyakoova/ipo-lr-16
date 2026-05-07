@@ -1,0 +1,95 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Каталог товаров{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card">
+            <div class="card-header bg-dark text-white">Фильтры</div>
+            <div class="card-body">
+                <form method="get" action="{% url 'shop:product_list' %}">
+                    <div class="mb-3">
+                        <label class="form-label">Категория</label>
+                        <select name="category" class="form-select">
+                            <option value="">Все категории</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if current_category == cat.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                 
+                    <div class="mb-3">
+                        <label class="form-label">Производитель</label>
+                        <select name="manufacturer" class="form-select">
+                            <option value="">Все производители</option>
+                            {% for mfr in manufacturers %}
+                                <option value="{{ mfr.id }}" {% if current_manufacturer == mfr.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ mfr.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+              
+                    <div class="mb-3">
+                        <label class="form-label">Поиск</label>
+                        <input type="text" name="search" class="form-control" placeholder="Название товара..." value="{{ search_query }}">
+                    </div>
+                  
+                    <button type="submit" class="btn btn-primary w-100">Применить фильтры</button>
+                    <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary w-100 mt-2">Сбросить</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <h2 class="mb-3">Каталог</h2>
+        
+        {% if page_obj %}
+            <div class="row products-grid">
+                {% for product in page_obj %}
+                <div class="col-sm-6 col-md-4 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        {% if product.photo %}
+                            <img src="{{ product.photo.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x200?text=Нет+фото" class="card-img-top" alt="{{ product.name }}">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-muted fw-bold mt-auto">{{ product.price }} ₽</p>
+                            <a href="{% url 'shop:product_detail' product.pk %}" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="products-fallback" style="display: none;">
+                <p class="text-center text-muted">Товары загружаются...</p>
+            </div>
+       
+            <nav aria-label="Навигация" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1{% if current_category %}&category={{ current_category }}{% endif %}{% if current_manufacturer %}&manufacturer={{ current_manufacturer }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Первая</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_manufacturer %}&manufacturer={{ current_manufacturer }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Предыдущая</a></li>
+                    {% endif %}
+                    
+                    <li class="page-item active"><span class="page-link">{{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span></li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_manufacturer %}&manufacturer={{ current_manufacturer }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Следующая</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_manufacturer %}&manufacturer={{ current_manufacturer }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Последняя</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <p class="text-center text-muted mt-5">Товары не найдены.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

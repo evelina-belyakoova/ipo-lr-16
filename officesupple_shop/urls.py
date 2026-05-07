@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -7,9 +6,20 @@ from shop import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name = 'index'),
-    path('about/', views.about, name = 'about'),
-     path('accounts/', include('django.contrib.auth.urls')),
-    path('shop-info/', views.shop_info, name = 'shop_info'),
+    
+    path('', views.index, name='index'),
+    path('about/', views.about, name='about'),
+    path('shop-info/', views.shop_info, name='shop_info'),
+    
+    path('accounts/', include('django.contrib.auth.urls')),
+    
+
     path('', include('shop.urls')),
+    
+    path('api/', include('shop.api_urls')),
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
