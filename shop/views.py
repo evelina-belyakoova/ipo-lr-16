@@ -5,7 +5,16 @@ from .models import Product, Cart, CartItem, Order, OrderItem, Category, Manufac
 from django.core.mail import EmailMessage
 from openpyxl import Workbook
 from io import BytesIO
+<<<<<<< HEAD
 from django.core.paginator import Paginator
+=======
+from rest_framework import viewsets, permissions
+from .models import Product, Category, Manufacturer, Cart, CartItem
+from .serializers import (
+    ProductSerializer, CategorySerializer, 
+    ManufacturerSerializer, CartSerializer, CartItemSerializer
+)
+>>>>>>> 408cd0cbc27aea19f09c977846944577d1091599
 
 def index(request):
     popular_products = Product.objects.all().order_by('-id')[:6]
@@ -157,3 +166,31 @@ def checkout(request):
     email.send()
     cart_items.delete()
     return render(request, 'shop/order_success.html', {'order': order})
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ManufacturerViewSet(viewsets.ModelViewSet):
+    queryset = Manufacturer.objects.all()
+    serializer_class = ManufacturerSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CartViewSet(viewsets.ModelViewSet):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.user)
+
+class CartItemViewSet(viewsets.ModelViewSet):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [permissions.IsAuthenticated]

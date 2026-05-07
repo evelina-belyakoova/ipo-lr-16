@@ -15,9 +15,13 @@ urlpatterns = [
     
 
     path('', include('shop.urls')),
+<<<<<<< HEAD
     
     path('api/', include('shop.api_urls')),
 
+=======
+    path('api/', include('shop.api_urls')),
+>>>>>>> 408cd0cbc27aea19f09c977846944577d1091599
 ]
 
 if settings.DEBUG:

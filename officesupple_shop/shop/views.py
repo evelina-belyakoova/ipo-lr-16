@@ -45,6 +45,7 @@ class CartItemViewSet(viewsets.ModelViewSet):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
     permission_classes = [permissions.IsAuthenticated]
+<<<<<<< HEAD
 
 
 # 🔹 Главная страница
@@ -116,3 +117,5 @@ def remove_from_cart(request, item_id):
 
 def checkout(request):
     return render(request, 'shop/checkout.html')
+=======
+>>>>>>> 408cd0cbc27aea19f09c977846944577d1091599
