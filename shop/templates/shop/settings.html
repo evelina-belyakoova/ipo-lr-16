@@ -1,0 +1,95 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Настройки{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">⚙️ Настройки</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">📝 Настройки профиля</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">❤️ Любимая категория</label>
+                            <select name="favorite_category" class="form-select">
+                                <option value="">— Не выбрана —</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}" 
+                                        {% if profile.favorite_category_id == cat.id %}selected{% endif %}>
+                                        {{ cat.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">🏙️ Город доставки</label>
+                            <input type="text" name="delivery_city" class="form-control" 
+                                   value="{{ profile.delivery_city }}" placeholder="Например: Минск">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">📮 Почтовый индекс</label>
+                            <input type="text" name="postal_code" class="form-control" 
+                                   value="{{ profile.postal_code }}" placeholder="Например: 220004" 
+                                   maxlength="10">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">💾 Сохранить настройки</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">🔐 Безопасность</h5>
+                </div>
+                <div class="card-body">
+                    <p>Вы можете изменить пароль от вашего аккаунта.</p>
+                    <p class="text-muted small">Пароль должен содержать минимум 8 символов и не быть слишком похожим на имя пользователя.</p>
+                    <a href="{% url 'shop:password_change' %}" class="btn btn-success w-100">
+                        🔑 Сменить пароль
+                    </a>
+                </div>
+            </div>
+            <div class="card shadow-sm mt-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">ℹ️ Информация</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email|default:"—" }}</p>
+                    <p><strong>Роль:</strong> 
+                        {% if user.is_staff %}
+                            <span class="badge bg-danger">Администратор</span>
+                        {% else %}
+                            <span class="badge bg-info">Покупатель</span>
+                        {% endif %}
+                    </p>
+                    <a href="{% url 'shop:profile' %}" class="btn btn-outline-primary w-100">
+                        ← Вернуться в личный кабинет
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

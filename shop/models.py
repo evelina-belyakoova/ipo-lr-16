@@ -63,3 +63,27 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     def __str__(self):
         return f"{self.product} x{self.quantity}"
+
+class Profile(models.Model):
+    ROLE_CHOICES = [
+        ('customer', 'Покупатель'),
+        ('admin', 'Администратор'),
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='customer', verbose_name='Роль')
+    phone = models.CharField(max_length=20, blank=True, verbose_name='Телефон')
+    address = models.TextField(blank=True, verbose_name='Адрес')
+    
+    favorite_category = models.ForeignKey(
+        'Category', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        verbose_name='Любимая категория'
+    )
+    delivery_city = models.CharField(max_length=100, blank=True, verbose_name='Город доставки')
+    postal_code = models.CharField(max_length=10, blank=True, verbose_name='Почтовый индекс')
+    
+    def __str__(self):
+        return f'Профиль {self.user.username}'

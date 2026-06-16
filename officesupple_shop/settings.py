@@ -14,13 +14,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
+
     'rest_framework',  
     'shop',            
-=======
-    'rest_framework',
-    'shop',
->>>>>>> 408cd0cbc27aea19f09c977846944577d1091599
 ]
 
 REST_FRAMEWORK = {
@@ -90,3 +86,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_URL = '/accounts/login/'
+
+LOGIN_REDIRECT_URL = 'shop:index'
+
+LOGOUT_REDIRECT_URL = 'shop:index'

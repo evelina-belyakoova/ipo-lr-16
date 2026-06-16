@@ -1,18 +1,16 @@
-<<<<<<< HEAD
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import api_views
 
+router = DefaultRouter()
+router.register(r'products', api_views.ProductViewSet, basename='product')
+router.register(r'orders', api_views.OrderViewSet, basename='order')
+router.register(r'categories', api_views.CategoryViewSet, basename='category')
+router.register(r'manufacturers', api_views.ManufacturerViewSet, basename='manufacturer')
+router.register(r'carts', api_views.CartViewSet, basename='cart')
+router.register(r'cart-items', api_views.CartItemViewSet, basename='cart-item')
+
 urlpatterns = [
-    path('cart/add/<int:product_id>/', api_views.add_to_cart_api, name='add_to_cart_api'),
+    path('me/', api_views.profile_api, name='api_profile'),
+    path('', include(router.urls)),
 ]
-=======
-from rest_framework.routers import DefaultRouter 
-from . import views 
-router = DefaultRouter() 
-router.register('products', views.ProductViewSet) 
-router.register('categories', views.CategoryViewSet) 
-router.register('manufacturers', views.ManufacturerViewSet) 
-router.register('carts', views.CartViewSet) 
-router.register('cart-items', views.CartItemViewSet) 
-urlpatterns = router.urls 
->>>>>>> 408cd0cbc27aea19f09c977846944577d1091599
