@@ -60,6 +60,17 @@ DATABASES = {
     )
 }
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 if not DEBUG:
@@ -89,11 +100,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = 'shop:home'
-LOGOUT_REDIRECT_URL = '/'            
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = 'shop:index'
+LOGOUT_REDIRECT_URL = 'shop:index'            
 
 
 MEDIA_URL = '/media/'
