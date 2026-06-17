@@ -5,6 +5,13 @@ build/
 dist/
 wheels/
 *.egg-info
-
+media/
+products/
+*.pyc
+db.sqlite3
+.venv/
+.python-version
+uv.lock
+.env
 # Virtual environments
 venv
