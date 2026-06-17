@@ -1,1 +1,1 @@
-web: gunicorn djangoproject.wsgi
+web: python manage.py collectstatic --noinput && gunicorn officesupple_shop.wsgi:application
