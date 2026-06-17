@@ -14,7 +14,7 @@ import os
 from decouple import config
 import dj_database_url
 
-BASE_DIR = Path(file).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-2-c#3#@x0y)8)y-4l_jtgh(g!gru)b#g3g=t^9q7+2cnqwiy6'
 
