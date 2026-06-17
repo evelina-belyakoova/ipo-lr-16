@@ -3,11 +3,20 @@ import os
 from decouple import config
 import dj_database_url
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+try:
+    ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+except Exception:
+    ALLOWED_HOSTS = ['*']
 
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+try:
+    DEBUG = config('DEBUG', cast=bool)
+except Exception:
+    DEBUG = True
+
+try:
+    SECRET_KEY = config('SECRET_KEY')
+except Exception:
+    SECRET_KEY = 'django-insecure-random-key-1234533'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
